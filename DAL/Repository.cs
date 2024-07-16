@@ -45,7 +45,7 @@ public class Repository : IRepository
     public async Task<User> GetUserByCredentialsAsync(string userName, string password)
     {
         var user = await _context.Users
-            .Where(u => u.UserName == userName)
+            .Where(u => u.UserName == userName && u.UserPassword == password)
             .Select(u => new User { UserId = u.UserId, UserName = u.UserName, UserPassword = u.UserPassword })
             .FirstOrDefaultAsync();
         if (user != null)
