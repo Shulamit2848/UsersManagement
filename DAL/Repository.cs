@@ -15,14 +15,19 @@ public class Repository : IRepository
 
     public async Task<User> CreateUserAsync(User user)
     {
+        if (_context.Users.Any(u => u.id == user.id))
+        {
+            throw new Exception("user already exist");
+
+        }
         try
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            throw new Exception(ex.Message); 
+            throw new Exception(ex.Message);
         }
         return user;
     }
@@ -42,8 +47,8 @@ public class Repository : IRepository
         var user = await _context.Users
             .Where(u => u.UserName == userName)
             .Select(u => new User { UserId = u.UserId, UserName = u.UserName, UserPassword = u.UserPassword })
-            .FirstOrDefaultAsync(); 
-        if (user != null )
+            .FirstOrDefaultAsync();
+        if (user != null)
         {
             return user;
         }
